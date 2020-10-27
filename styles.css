@@ -1,9 +1,38 @@
 html, body{
     overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
 canvas{
     border: 3px solid black;
 }
 canvas:hover{
     cursor: none;
+}
+
+#maz{
+    height: 560px;
+    width: 1240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#startGame{
+    background-image: url('./assets/maz.png');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    height: 560px;
+    width: 1240px;
+    border: 3px solid black;
 }
