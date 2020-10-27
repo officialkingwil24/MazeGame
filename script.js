@@ -4,7 +4,6 @@ document.getElementById('startGame').addEventListener('click', function startGam
   var maz = document.getElementById('maz')
   var mazz = document.getElementById('startGame')
   maz.removeChild(mazz)
-  console.log("executed...")
 
   var char = 5;
   var x = canvas.width/5
@@ -27,6 +26,12 @@ document.getElementById('startGame').addEventListener('click', function startGam
   var allEnemies = [
     { width: 20, height: 20, x: 25, y: 410, orientation: "up"}, 
     { width: 20, height: 20, x: 85, y: 230, orientation: "down"},
+    { width: 20, height: 20, x: 155, y: 30, orientation: "down"},
+    { width: 20, height: 20, x: 155, y: 50, orientation: "right"},
+    { width: 20, height: 20, x: 410, y: 360, orientation: "right"},
+    { width: 20, height: 20, x: 410, y: 190, orientation: "right"},
+    { width: 20, height: 20, x: 450, y: 195, orientation: "down"},
+    { width: 20, height: 20, x: 800, y: 185, orientation: "down"},
     { width: 20, height: 20, x: 135, y: 505, orientation: "right"},
     { width: 20, height: 20, x: 255, y: 150, orientation: "down"},
     { width: 20, height: 20, x: 330, y: 410, orientation: "up"},
@@ -199,14 +204,10 @@ document.getElementById('startGame').addEventListener('click', function startGam
       } else if (currentEnemy.orientation == "up" || currentEnemy.orientation == "down"){
         moveEnemyYVal(currentEnemy, 2);
       }
-      // updateEnemy(currentEnemy);
       drawEnemy(currentEnemy);
       impactEnemy(currentEnemy);
     }
   }
-  // function updateEnemy(currentEnemy){
-  //  // console.log(allEnemies)
-  // }
   function drawEnemy(currentEnemy) {
     ctx.beginPath();
     ctx.rect(currentEnemy.x, currentEnemy.y, currentEnemy.width, currentEnemy.height);
@@ -249,10 +250,7 @@ document.getElementById('startGame').addEventListener('click', function startGam
     (charX + charWidth > winBox.x && charX + charWidth < winBox.x + winBox.w)) &&
     ((charY > winBox.y && charY < winBox.y + winBox.h) || 
     (charY + charHeight > winBox.y && charY + charHeight < winBox.y + winBox.h))){
-      alert("YOU WON, IT TOOK YOU"+ attempts + "ATTEMPTS.")
-      
-      // alert("YOU LOST")
-      //document.location.reload();
+      alert("YOU WON, IT TOOK YOU "+ attempts + " ATTEMPTS.")
     }
   }
 
@@ -295,21 +293,21 @@ document.getElementById('startGame').addEventListener('click', function startGam
         ((charY >= currentWall.stry && charY <= currentWall.stry + currentWall.height) || 
         (charY + charHeight >= currentWall.stry && charY + charHeight <= currentWall.stry + currentWall.height))
         ){
-        //console.log('hit wall')
+        //('hit wall')
         if(charX == currentWall.strx + currentWall.width){
-        // console.log('wall on left')
+        //('wall on left')
           objLeft = true;
         }
         if(charX + charWidth == currentWall.strx){
-        //  console.log('wall on right')
+        //('wall on right')
           objRight = true;
         }
         if(charY + charHeight == currentWall.stry){
-        // console.log('wall on down')
+        //('wall on down')
           objDown = true;
         }
         if(charY == currentWall.stry + currentWall.height){
-        //  console.log('wall on top')
+        //('wall on top')
           objTop = true;
         }
       }
@@ -319,24 +317,21 @@ document.getElementById('startGame').addEventListener('click', function startGam
   function moveChar(){
     if(rightPressed && charX < canvas.width-charWidth && !objRight) {
       charX += 1;
-      //hitWall() ? charX -= 1 : null;
     }
     else if(leftPressed && charX > 0 && !objLeft) {
       charX -= 1;
-    // hitWall() ? charX += 1 : null;
     }
     else if(upPressed && charY > 0 && !objTop){
       charY -= 1;
-      //hitWall() ? charY += 1 : null;
     }
     else if(downPressed && charY < canvas.height-charHeight && !objDown){
       charY += 1;
-      //hitWall() ? charY -= 1 : null;
     }
   }
 
   function drawAttempts(){
     ctx.font = "16px Arial";
+    ctx.fillStyle = "blue"
     ctx.fillText(`losses: ${attempts}`, 15, 15)
   }
 
@@ -358,4 +353,3 @@ document.getElementById('startGame').addEventListener('click', function startGam
 
   var interval = setInterval(draw, 8);
 })
-// startGame();
