@@ -16,7 +16,13 @@ document.getElementById('startGame').addEventListener('click', function startGam
   var charX = Math.round((canvas.width-charWidth)/1);
   var charY = Math.round((canvas.height-charHeight)/1);
   var objRight, objLeft, objTop, objDown, rightPressed, leftPressed, upPressed, downPressed = false;
-  var lives = 3;
+  var attempts = 0;
+  var winBox = {
+    x: canvas.width/2 -120,
+    y: canvas.height/2 -60,
+    w: 270,
+    h: 100,
+  } 
   let pause = false;
   var allEnemies = [
     { width: 20, height: 20, x: 25, y: 410, orientation: "up"}, 
@@ -209,6 +215,14 @@ document.getElementById('startGame').addEventListener('click', function startGam
     ctx.closePath();
   }
 
+  function drawWinBox() {
+    ctx.beginPath();
+    ctx.rect(winBox.x, winBox.y, winBox.w, winBox.h);
+    ctx.fillStyle = "green";
+    ctx.fill();
+    ctx.closePath();
+  }
+
   function impactEnemy(currentEnemy){
     // compare char left to enemy left and right   OR   
     // compare char right to enemy left and right
@@ -219,7 +233,26 @@ document.getElementById('startGame').addEventListener('click', function startGam
     (charX + charWidth > currentEnemy.x && charX + charWidth < currentEnemy.x + currentEnemy.width)) &&
     ((charY > currentEnemy.y && charY < currentEnemy.y + currentEnemy.height) || 
     (charY + charHeight > currentEnemy.y && charY + charHeight < currentEnemy.y + currentEnemy.height))){
-      alert("YOU LOST")
+      charX = Math.round((canvas.width-charWidth)/1);
+      charY = Math.round((canvas.height-charHeight)/1);
+      attempts++;
+    }
+  }
+
+  function impactWin(){
+    // compare char left to enemy left and right   OR   
+    // compare char right to enemy left and right
+    // &&
+    // compare char top to enemy top and bottom   OR   
+    // compare char bottom to enemy top and bottom
+    if(((charX > winBox.x && charX < winBox.x + winBox.w) || 
+    (charX + charWidth > winBox.x && charX + charWidth < winBox.x + winBox.w)) &&
+    ((charY > winBox.y && charY < winBox.y + winBox.h) || 
+    (charY + charHeight > winBox.y && charY + charHeight < winBox.y + winBox.h))){
+      alert("YOU WON, IT TOOK YOU"+ attempts + "ATTEMPTS.")
+      
+      // alert("YOU LOST")
+      //document.location.reload();
     }
   }
 
@@ -241,41 +274,17 @@ document.getElementById('startGame').addEventListener('click', function startGam
 
   const lineContactPoints = contactPointsObj();
 
-  function hitWallEnemy(enemy){
-    for(let i = 0; i < enemy.width; i++){
-      for(let j = 0; j < enemy.height; j++){
-        if(lineContactPoints[`${enemy.x + i} ${enemy.y + j}`]){
+
+
+  function enemyWallTouch(currentEnemy){
+    for(let i = 0; i < currentEnemy.width; i++){
+      for(let j = 0; j < currentEnemy.height; j++){
+        if(lineContactPoints[`${currentEnemy.x + i} ${currentEnemy.y + j}`]){
           return true
         }
       }
     }
     return false;
-  }
-
-  function enemyWallTouch(currentEnemy){
-    // for(let line in allLines){
-
-    //   let currentWall = allLines[line];
-
-    //   let charX = currentEnemy.x;
-    //   let charY = currentEnemy.y;
-
-    //   let charHeight = currentEnemy.height;
-    //   let charWidth = currentEnemy.width;
-
-    //   if(
-    //     ((charX >= currentWall.strx && charX <= currentWall.strx + currentWall.width) || 
-    //     (charX + charWidth >= currentWall.strx && charX + charWidth <= currentWall.strx + currentWall.width)) &&
-    //     ((charY >= currentWall.stry && charY <= currentWall.stry + currentWall.height) || 
-    //     (charY + charHeight >= currentWall.stry && charY + charHeight <= currentWall.stry + currentWall.height))
-    //     ){
-    //       console.log('false')
-    //       return true
-    //    } else {
-    //     return false
-    //   }
-    // }
-    return hitWallEnemy(currentEnemy);
   }
 
   function touchWall(){
@@ -326,6 +335,11 @@ document.getElementById('startGame').addEventListener('click', function startGam
     }
   }
 
+  function drawAttempts(){
+    ctx.font = "16px Arial";
+    ctx.fillText(`losses: ${attempts}`, 15, 15)
+  }
+
   function draw() {
     if(pause){
       console.log("paused")
@@ -336,7 +350,10 @@ document.getElementById('startGame').addEventListener('click', function startGam
     updateAllEnemies();
     touchWall();
     drawChar();
+    drawWinBox();
     drawlines();
+    drawAttempts();
+    impactWin();
   }
 
   var interval = setInterval(draw, 8);
